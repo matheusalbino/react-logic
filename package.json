@@ -1,0 +1,49 @@
+{
+  "name": "@matheusalbino/react-logic",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "author": "Matheus Albino",
+  "license": "MIT",
+  "homepage": "https://github.com/matheusalbino/react-logic",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/matheusalbino/react-logic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matheusalbino/react-logic/issues"
+  },
+  "keywords": [
+    "react",
+    "logic"
+  ],
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.7",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "prettier": "^2.0.5"
+  },
+  "scripts": {
+    "copy:package": "cp package.json build/package.json",
+    "copy:license": "cp LICENSE build/LICENSE",
+    "prebuild": "rm -rf build",
+    "build": "tsc",
+    "postbuild": "yarn copy:package && yarn copy:license"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "lib",
+    "package.json",
+    "LICENSE"
+  ]
+}
