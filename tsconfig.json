@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "build/lib",
+    "module": "CommonJS",
+    "target": "ES5",
+    "lib": ["ES6"],
+    "sourceMap": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build", "example"]
+}
