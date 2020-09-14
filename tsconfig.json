@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "build/lib",
-    "module": "CommonJS",
+    "allowJs": true,
     "target": "ES5",
-    "lib": ["ES6"],
-    "sourceMap": true,
-    "jsx": "react",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist",
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
     "esModuleInterop": true,
-    "declaration": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "build", "example"]
+    "forceConsistentCasingInFileNames": true
+  }
 }

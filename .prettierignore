@@ -1,3 +1,4 @@
-# Build
 node_modules
-build
+.jest-cache
+coverage
+dist

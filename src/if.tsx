@@ -1,30 +1,28 @@
 import React from 'react';
 
-export interface IfProps<T> extends React.AllHTMLAttributes<T> {
+export type IfProps<ExtraProps = any> = {
   if?: boolean;
-}
+  [key: string]: any;
+} & ExtraProps;
 
-export interface IfChildProps<T> {}
-
-export type IfComponent<T> =
-  | React.FC<IfChildProps<T>>
-  | ((props: IfChildProps<T>) => React.ReactElement);
-
-export function If<T>(Component: IfComponent<T>): React.FC<IfProps<T>> {
-  function Wrapper(props: IfProps<T>): React.ReactElement | null {
+export function If<ComponentProps, ExtraProps = any>(
+  Component: React.FC<ComponentProps>
+): React.FC<IfProps<ExtraProps>> {
+  const Wrapper: React.FC<IfProps<ExtraProps>> = (props) => {
     const { if: condition, ...componentProps } = props;
 
-    if (condition) {
-      return React.createElement(Component, componentProps);
+    if (condition === undefined || condition) {
+      return <Component {...((componentProps as unknown) as ComponentProps)} />;
     }
 
     return null;
-  }
+  };
 
-  Wrapper.displayName = 'If';
+  Wrapper.displayName = Component.name ?? 'If';
 
+  // @ts-expect-error
   Wrapper.defaultProps = {
-    if: true,
+    if: true
   };
 
   return Wrapper;
