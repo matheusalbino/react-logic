@@ -1,50 +1,37 @@
 import React from 'react';
-import { Repeat, RepeatProps, RepeatComponent } from './repeat';
-import { For, ForProps, ForComponent } from './for';
-import { If, IfProps, IfComponent } from './if';
+import { Repeat, RepeatProps } from './repeat';
+import { For, ForProps } from './for';
+import { If, IfProps } from './if';
 
-type LogicProps<T> = IfProps<T> | RepeatProps<T> | ForProps<T>;
-type LogicComponent<T> = IfComponent<T> | RepeatComponent<T> | ForComponent<T>;
+export type LogicProps<DataProps, ExtraProps = any> = IfProps<ExtraProps> &
+  RepeatProps<ExtraProps> &
+  ForProps<DataProps, ExtraProps>;
 
-export function Logic<T>(
-  Component: LogicComponent<T>,
-): React.FC<LogicProps<T>> {
-  function Wrapper(props: any): React.ReactElement | null {
-    const {
-      repeat,
-      keyAttr,
-      for: map,
-      if: condition,
-      ...componentProps
-    } = props;
+const pipe = (...fns: Function[]): Function =>
+  fns.reduce((f: Function, g: Function) => (...args: any) => g(f(...args)));
 
-    if (repeat !== undefined) {
-      const Wrapper = Repeat(Component as RepeatComponent<T>);
-      return React.createElement(Wrapper, { repeat, ...componentProps });
-    }
+export function Logic<ComponentProps, ExtraProps = any, DataProps = any>(
+  Component: React.FC<ComponentProps>
+): React.FC<LogicProps<DataProps, ExtraProps>> {
+  const Wrapper: React.FC<LogicProps<DataProps, ExtraProps>> = (props) => {
+    const { repeat, for: map } = props;
+
+    const logics: any[] = [If];
 
     if (map !== undefined) {
-      const Wrapper = For(Component as ForComponent<T>);
-      return React.createElement(Wrapper, {
-        keyAttr,
-        for: map,
-        ...componentProps,
-      });
+      logics.push(For);
     }
 
-    if (condition !== undefined) {
-      const Wrapper = If(Component as IfComponent<T>);
-      return React.createElement(Wrapper, { if: condition, ...componentProps });
+    if (repeat !== undefined) {
+      logics.push(Repeat);
     }
 
-    return null;
-  }
+    const Executor = pipe(...logics)(Component);
 
-  Wrapper.displayName = 'LogicProps';
-
-  Wrapper.defaultProps = {
-    if: true,
+    return <Executor {...props} />;
   };
+
+  Wrapper.displayName = Component.name ?? 'LogicProps';
 
   return Wrapper;
 }

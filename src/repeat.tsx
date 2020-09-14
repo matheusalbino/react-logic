@@ -1,46 +1,33 @@
 import React from 'react';
 
-export interface RepeatProps<T> extends React.AllHTMLAttributes<T> {
+export type RepeatProps<ExtraProps = any> = {
   repeat: number;
-}
+  [K: string]: any;
+} & ExtraProps;
 
-export interface RepeatChildProps<T> {
-  key?: string | number;
-  index: number;
-}
-
-export type RepeatComponent<T> =
-  | React.FC<RepeatChildProps<T>>
-  | ((props: RepeatChildProps<T>) => React.ReactElement);
-
-export function Repeat<T>(
-  Component: RepeatComponent<T>,
-): React.FC<RepeatProps<T>> {
-  function Wrapper(props: RepeatProps<T>): React.ReactElement {
+export function Repeat<ComponentProps, ExtraProps = any>(
+  Component: React.FC<ComponentProps>
+): React.FC<RepeatProps<ExtraProps>> {
+  const Wrapper: React.FC<RepeatProps<ExtraProps>> = (props) => {
     const { repeat: times, ...componentProps } = props;
-    const list = Array(times).fill(undefined);
+    const list = Array(Math.max(1, times)).fill(undefined);
 
     return (
       <React.Fragment>
         {list.map((_, index) => {
-          if (typeof Component === 'function') {
-            return Component({ key: index, index, ...componentProps });
-          }
+          const newProps = { key: index, index, ...componentProps };
 
-          return React.createElement(Component, {
-            key: index,
-            index,
-            ...componentProps,
-          });
+          return <Component {...((newProps as unknown) as ComponentProps)} />;
         })}
       </React.Fragment>
     );
-  }
+  };
 
-  Wrapper.displayName = 'Repeat';
+  Wrapper.displayName = Component.name ?? 'Repeat';
 
+  // @ts-expect-error
   Wrapper.defaultProps = {
-    repeat: 1,
+    repeat: 1
   };
 
   return Wrapper;
