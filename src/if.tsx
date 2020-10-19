@@ -1,14 +1,14 @@
 import React from 'react';
 
-export type IfProps<ExtraProps = any> = {
+export type IfProps<ExtraProps = {}> = {
   if?: boolean;
-  [key: string]: any;
-} & ExtraProps;
+} & ExtraProps &
+  Record<string, any>;
 
-export function If<ComponentProps, ExtraProps = any>(
-  Component: React.FC<ComponentProps>
-): React.FC<IfProps<ExtraProps>> {
-  const Wrapper: React.FC<IfProps<ExtraProps>> = (props) => {
+type IfComponent<ExtraProps> = React.FC<IfProps<ExtraProps>>;
+
+export function If<ComponentProps, ExtraProps = {}>(Component: React.FC<ComponentProps>): IfComponent<ExtraProps> {
+  const Wrapper: IfComponent<ExtraProps> = (props) => {
     const { if: condition, ...componentProps } = props;
 
     if (condition === undefined || condition) {

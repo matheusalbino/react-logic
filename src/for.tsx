@@ -3,16 +3,18 @@ import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 import mapKeys from 'lodash/mapKeys';
 
-export type ForProps<DataProps, ExtraProps = any> = {
+export type ForProps<DataProps, ExtraProps = {}> = {
   'for-key': ((item: DataProps, index: number) => string | number) | undefined;
   for: DataProps[];
-  [K: string]: any;
-} & ExtraProps;
+} & ExtraProps &
+  Record<string, any>;
 
-export function For<ComponentProps, ExtraProps = any, DataProps = any>(
+type ForComponent<DataProps, ExtraProps> = React.FC<ForProps<DataProps, ExtraProps>>;
+
+export function For<ComponentProps extends { data: any }, ExtraProps = {}>(
   Component: React.FC<ComponentProps>
-): React.FC<ForProps<DataProps, ExtraProps>> {
-  const Wrapper: React.FC<ForProps<DataProps, ExtraProps>> = (props) => {
+): ForComponent<ComponentProps['data'], ExtraProps> {
+  const Wrapper: ForComponent<ComponentProps['data'], ExtraProps> = (props) => {
     const { for: list, 'for-key': getKey, ...propsToPass } = props;
 
     const componentProps = pickBy(propsToPass, (_value, key) => !key.startsWith('for-'));

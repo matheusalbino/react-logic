@@ -6,7 +6,7 @@ export default {
   component: For,
   args: {
     for: [{ name: 'Item 1' }, { name: 'Item 2' }, { name: 'Item 3' }],
-    'for-key': (item: any) => item.name
+    'for-key': (item: { name: string }) => item.name
   },
   argTypes: {
     for: {
@@ -37,7 +37,7 @@ const Li: React.FC<LiProps> = (props) => {
 
 const ForComponent = For(Li);
 
-export const Default: React.FC<ForProps<LiProps>> = (props) => (
+export const Default: React.FC<ForProps<LiProps['data']>> = (props) => (
   <ul>
     <ForComponent {...props} />
   </ul>

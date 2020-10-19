@@ -1,14 +1,16 @@
 import React from 'react';
 
-export type RepeatProps<ExtraProps = any> = {
+export type RepeatProps<ExtraProps = {}> = {
   repeat: number;
-  [K: string]: any;
-} & ExtraProps;
+} & ExtraProps &
+  Record<string, any>;
 
-export function Repeat<ComponentProps, ExtraProps = any>(
+type RepeatComponent<ExtraProps> = React.FC<RepeatProps<ExtraProps>>;
+
+export function Repeat<ComponentProps, ExtraProps = {}>(
   Component: React.FC<ComponentProps>
-): React.FC<RepeatProps<ExtraProps>> {
-  const Wrapper: React.FC<RepeatProps<ExtraProps>> = (props) => {
+): RepeatComponent<ExtraProps> {
+  const Wrapper: RepeatComponent<ExtraProps> = (props) => {
     const { repeat: times, ...componentProps } = props;
     const list = Array(Math.max(1, times)).fill(undefined);
 

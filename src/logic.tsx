@@ -1,22 +1,22 @@
 import React from 'react';
+import { flow } from 'lodash';
 import { Repeat, RepeatProps } from './repeat';
 import { For, ForProps } from './for';
 import { If, IfProps } from './if';
 
-export type LogicProps<DataProps, ExtraProps = any> = IfProps<ExtraProps> &
-  RepeatProps<ExtraProps> &
-  ForProps<DataProps, ExtraProps>;
+export type LogicProps<DataProps, ExtraProps = {}> = IfProps<ExtraProps> &
+  Partial<RepeatProps<ExtraProps>> &
+  Partial<ForProps<DataProps, ExtraProps>>;
 
-const pipe = (...fns: Function[]): Function =>
-  fns.reduce((f: Function, g: Function) => (...args: any) => g(f(...args)));
+type LogicComponent<DataProps, ExtraProps> = React.FC<LogicProps<DataProps, ExtraProps>>;
 
-export function Logic<ComponentProps, ExtraProps = any, DataProps = any>(
+export function Logic<ComponentProps extends { data: any }, ExtraProps = {}>(
   Component: React.FC<ComponentProps>
-): React.FC<LogicProps<DataProps, ExtraProps>> {
-  const Wrapper: React.FC<LogicProps<DataProps, ExtraProps>> = (props) => {
+): LogicComponent<ComponentProps['data'], ExtraProps> {
+  const Wrapper: LogicComponent<ComponentProps['data'], ExtraProps> = (props) => {
     const { repeat, for: map } = props;
 
-    const logics: any[] = [If];
+    const logics: Array<typeof If | typeof For | typeof Repeat> = [If];
 
     if (map !== undefined) {
       logics.push(For);
@@ -26,7 +26,7 @@ export function Logic<ComponentProps, ExtraProps = any, DataProps = any>(
       logics.push(Repeat);
     }
 
-    const Executor = pipe(...logics)(Component);
+    const Executor = flow(logics)(Component);
 
     return <Executor {...props} />;
   };
