@@ -8,7 +8,7 @@ const BUILD_DIRECTORY = path.resolve(PROJECT_DIRECTORY, 'dist');
 const packageJSON: any = { ...project };
 delete packageJSON.devDependencies;
 
-fs.writeFileSync(path.resolve(BUILD_DIRECTORY, 'package.json'), JSON.stringify(packageJSON), {
+fs.writeFileSync(path.resolve(BUILD_DIRECTORY, 'package.json'), JSON.stringify(packageJSON, null, 2), {
   encoding: 'utf8'
 });
 

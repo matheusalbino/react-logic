@@ -18,7 +18,11 @@ export default {
   }
 };
 
-const Image: React.FC<React.ImgHTMLAttributes<{}>> = (props: any) => {
+interface ImageProps {
+  data: { title: string };
+}
+
+const Image: React.FC<ImageProps> = (props) => {
   const { data, ...extraProps } = props;
 
   return <ReactLogo {...extraProps} data={data} />;
@@ -26,4 +30,4 @@ const Image: React.FC<React.ImgHTMLAttributes<{}>> = (props: any) => {
 
 const LogicComponent = Logic(Image);
 
-export const Default: React.FC<LogicProps<any>> = (props) => <LogicComponent {...props} />;
+export const Default: React.FC<LogicProps<ImageProps['data']>> = (props) => <LogicComponent {...props} />;

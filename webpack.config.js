@@ -1,6 +1,5 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserJSPlugin = require('terser-webpack-plugin');
 const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
 
 module.exports = () => {
@@ -22,7 +21,6 @@ module.exports = () => {
         }
       ]
     },
-    optimization: { minimizer: [new TerserJSPlugin({})] },
     resolve: {
       extensions: ['.tsx', '.ts', '.js']
     },
